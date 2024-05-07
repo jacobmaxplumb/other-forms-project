@@ -6,6 +6,10 @@ const intialFormValues = {
   description: "",
 };
 
+const initialErrors = {
+  fullName: "",
+};
+
 const schema = yup.object().shape({
   fullName: yup
     .string()
@@ -17,19 +21,28 @@ const schema = yup.object().shape({
 function App() {
   const [formValues, setFormValues] = useState(intialFormValues);
   const [isDisabled, setIsDisabled] = useState(true);
+  const [errors, setErrors] = useState(initialErrors);
 
   useEffect(() => {
     schema.isValid(formValues).then((valid) => {
       setIsDisabled(!valid);
-    })
-  }, [formValues])
+    });
+  }, [formValues]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
-    yup.reach(schema, name).validate(value)
-      .then(() => {console.log(`is valid: ${name}, ${value}`)})
-      .catch(() => {console.log(`is not valid: ${name}, ${value}`)})
+    if (name === "fullName") {
+      yup
+        .reach(schema, name)
+        .validate(value)
+        .then(() => {
+          setErrors({ ...errors, [name]: "" });
+        })
+        .catch((err) => {
+          setErrors({...errors, [name]: err.errors[0]})
+        });
+    }
   };
 
   const handleSubmit = (e) => {
@@ -44,6 +57,7 @@ function App() {
         name="fullName"
         value={formValues.fullName}
       />
+      {errors.fullName && <p>{errors.fullName}</p>}
       <input
         onChange={handleInputChange}
         name="description"
