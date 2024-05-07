@@ -8,10 +8,15 @@ const intialFormValues = {
 function App() {
   const [formValues, setFormValues] = useState(intialFormValues);
 
+  const handleInputChange = (e) => {
+    const {name, value} = e.target;
+    console.log(`value: ${value}, name: ${name}`);
+  }
+
   return (
     <form>
-      <input value={formValues.fullName} />
-      <input value={formValues.description} />
+      <input onChange={handleInputChange} name="fullName" value={formValues.fullName} />
+      <input onChange={handleInputChange} name="description" value={formValues.description} />
     </form>
   );
 }
