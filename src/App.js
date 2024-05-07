@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as yup from "yup";
 
 const intialFormValues = {
@@ -16,16 +16,20 @@ const schema = yup.object().shape({
 
 function App() {
   const [formValues, setFormValues] = useState(intialFormValues);
+  const [isDisabled, setIsDisabled] = useState(true);
 
   useEffect(() => {
     schema.isValid(formValues).then((valid) => {
-      console.log(valid);
+      setIsDisabled(!valid);
     })
   }, [formValues])
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormValues({ ...formValues, [name]: value }); // {description: '', fullName: 'a'}
+    setFormValues({ ...formValues, [name]: value });
+    yup.reach(schema, name).validate(value)
+      .then(() => {console.log(`is valid: ${name}, ${value}`)})
+      .catch(() => {console.log(`is not valid: ${name}, ${value}`)})
   };
 
   const handleSubmit = (e) => {
@@ -45,7 +49,7 @@ function App() {
         name="description"
         value={formValues.description}
       />
-      <button>Submit</button>
+      <button disabled={isDisabled}>Submit</button>
     </form>
   );
 }
