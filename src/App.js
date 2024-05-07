@@ -10,7 +10,7 @@ function App() {
 
   const handleInputChange = (e) => {
     const {name, value} = e.target;
-    console.log(`value: ${value}, name: ${name}`);
+    setFormValues({...formValues, [name]: value}) // {description: '', fullName: 'a'}
   }
 
   return (
