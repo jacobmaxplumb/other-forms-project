@@ -1,12 +1,17 @@
 import { useState } from "react";
 
+const intialFormValues = {
+  fullName: '',
+  description: ''
+}
+
 function App() {
-  const [fullName, setFullName] = useState('');
-  const [description, setDescription] = useState('');
+  const [formValues, setFormValues] = useState(intialFormValues);
+
   return (
     <form>
-      <input value={fullName} />
-      <input value={description} />
+      <input value={formValues.fullName} />
+      <input value={formValues.description} />
     </form>
   );
 }
